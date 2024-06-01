@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import mongoose from 'mongoose'
+import userRouter from './routes/userRouter.js'
 
 
 dotenv.config()
@@ -23,6 +24,7 @@ mongoose.set('strictQuery', false)
 const connectedDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true, useUnifiedTopology: true 
         })
         console.log("Database connected")
     } catch (error) {
@@ -32,11 +34,12 @@ const connectedDB = async () => {
 
 
 //middleware
-app.use(express())
+app.use(express.json())
 app.use(cookieParser())
 app.use(cors(corsOptions))
 
 //routes
+app.use('/api/user', userRouter)
 
 app.listen(port,() => {
     connectedDB()
